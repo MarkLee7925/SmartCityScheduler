@@ -1,7 +1,7 @@
 # File name: Scheduler.py
 # Author: Mark Lee
 # Date created: 09/01/2020
-# Date last modified: 07/02/2020
+# Date last modified: 14/02/2020
 # Python Version: 3.8.1x
 
 # ----- Imports -----
@@ -124,14 +124,36 @@ class Schedule:
         ent.get_capacity().sort(reverse = True)
 
     # Sort by type
-    # Priority Order: Waste, Recycling, Paper, Compost
+    # Priority Order: Compost, Waste, Bottles and Cans, Paper
     def sort_type(self, i):
-        type = {
-            0: "Compost",
-            1: "Waste",
-            2: "Bottles and Cans",
-            3: "Paper"
+        def TypeCompost(self):
+            print("Sort Compost: rn")
+
+        def TypeWaste(self):
+            print("Sort Compost: rn")
+
+        def TypeBottlesAndCans(self):
+            print("Sort Compost: rn")
+
+        def TypePaper(self):
+            print("Sort Compost: rn")
+
+        SortMethod = {
+            0: TypeCompost,
+            1: TypeWaste,
+            2: TypeBottlesAndCans,
+            3: TypePaper
         }
+
+        sortSelect = 0
+        while (sortSelect != 3):
+            print("Compost")
+            print("Waste")
+            print("Bottles and Cans")
+            print("Paper")
+            Selection = int(input("Select a sorting method: "))
+            if (Selection >= 0) and (Selection < 4):
+                SortMethod[Selection]()
 
         return type.get(i, "Nothing")
 
