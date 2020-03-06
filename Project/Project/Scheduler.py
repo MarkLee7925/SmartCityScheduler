@@ -1,7 +1,7 @@
 # File name: Scheduler.py
 # Author: Mark Lee
 # Date created: 09/01/2020
-# Date last modified: 14/02/2020
+# Date last modified: 28/02/2020
 # Python Version: 3.8.1x
 
 # ----- Imports -----
@@ -20,13 +20,14 @@ except ImportError:
 
 date_time = ""
 location = ""
-id = ""
-capacity = 0
+BinID = ""
+level = 0
+# neighbourhood_id = ""
 type = ["Compost", "Waste", "Bottles and Cans", "Paper"]
 
-
-MAX_CAPACITY = 3
-MAX_CAPACITY_ORGANICS = 10
+MAX_LEVEL = 3
+MAX_LEVEL_ORGANICS = 10
+MAX_NUMBER_OF_ENTRIES = 15000    # May change due to 64GB SD Card size
 
 # ----- Schedule class -----
 
@@ -34,11 +35,11 @@ class Schedule:
 
     # --- Initialize each database entry object ---
 
-    def __init__(self, date_time, location, id, capacity, type):
+    def __init__(self, date_time, location, BinID, level, type):
         self.date_time = date_time
         self.location = location
-        self.id = id
-        self.capacity = capacity
+        self.BinID = BinID
+        self.level = level
         self.type = type
 
     # Initialize each entry in priority queue
@@ -64,20 +65,20 @@ class Schedule:
         self._location = l
 
     # Get ID of bin
-    def get_id(self):
-        return self._id
+    def get_BinID(self):
+        return self._BinID
 
     # Set ID of bin
-    def set_id(self, i):
-        self._id = i
+    def set_BinID(self, b):
+        self._BinID = b
 
-    # Get capacity of bin
-    def get_capacity(self):
-        return self._capacity
+    # Get level of bin
+    def get_level(self):
+        return self._level
 
-    # Set capacity of bin
-    def set_capacity(self, c):
-        self._capacity = c
+    # Set level of bin
+    def set_capacity(self, l):
+        self._level = l
 
     # Get type of garbage in bin
     def get_type(self):
@@ -96,16 +97,16 @@ class Schedule:
         )
 
     # Sort by location
-    # Need to compute the shortest path from user to nearest bin - Phase Two
+    # Need to compute the shortest path from user to nearest bin - Phase Three
     #def sort_location(self, ent):
 
     # Sort by ID
-    def sort_id(self, ent):
+    def sort_BinID(self, ent):
         ent.sort(key = str.lower, reverse = True)
 
 
-    # Sort by capacity
-    def sort_capacity(self, ent):
+    # Sort by level
+    def sort_level(self, ent):
         for i in range(len(ent)):
             min_index = i
             for j in range(i + 1, len(ent)):
@@ -121,22 +122,41 @@ class Schedule:
         #new_ent_cap.append(minimum)
         #ent.remove(minimum)
 
-        ent.get_capacity().sort(reverse = True)
+        ent.get_level().sort(reverse = True)
 
     # Sort by type
     # Priority Order: Compost, Waste, Bottles and Cans, Paper
     def sort_type(self, i):
-        def TypeCompost(self):
+        def TypeCompost(self, ent):
             print("Sort Compost: rn")
+            if self._type == "Compost":
+                ent.sort(reverse=True)
+            else:
+                print("Invalid. Type must be Compost")
 
-        def TypeWaste(self):
+        def TypeWaste(self, ent):
             print("Sort Compost: rn")
+            if self._type == "Waste":
+                ent.sort(reverse=True)
+            else:
+                print("Invalid. Type must be Waste")
 
-        def TypeBottlesAndCans(self):
-            print("Sort Compost: rn")
 
-        def TypePaper(self):
+        def TypeBottlesAndCans(self, ent):
             print("Sort Compost: rn")
+            if self._type == "Bottles and Cans":
+                ent.sort(reverse=True)
+            else:
+                print("Invalid. Type must be Bottles and Cans.")
+
+
+        def TypePaper(self, ent):
+            print("Sort Compost: rn")
+            if self._type == "Paper":
+                ent.sort(reverse=True)
+            else:
+                print("Invalid. Type must be Paper.")
+
 
         SortMethod = {
             0: TypeCompost,
@@ -178,15 +198,23 @@ class Schedule:
             del self.queue[max]
             return item
         except IndexError:
-            print()
+            print("Cannot delete. Entry not found.")
             exit()
-
 
     # --- Other features ---
 
     # Get details of a database entry
     def get_details(self):
-        print(self._date_time, self._location, self._id, self._capacity, self._type)
+        print(self._date_time, self._location, self._BinID, self._level, self._type)
+
+    # Print all database entries
+    def display_entries(self, ent):
+        for i in range(len(ent)):
+            print(ent[i])
+
+    # Default errors
+    def errorMessage(self):
+        print("Cannot sort. Please try again.")
 
 # Display list of all database entries
 #def display_schedule(self):
@@ -198,17 +226,9 @@ def main():
 
     # Append new entries when received
     ent.append(Schedule(datetime, "Rye U", "12345", 10, "Waste"))
-    ent.append(Schedule(datetime, "Rye U", "23403", 15, "Paper"))
+    ent.append(Schedule(datetime, "Rye U", "23403", 8, "Paper"))
     ent.append(Schedule(datetime, "Rye U", "01322", 5, "Compost"))
     ent.append(Schedule(datetime, "Rye U", "94943", 9, "Bottles and Cans"))
-
-    # Sort list of objects
-    # Note: Priority is based on Type
-
-
-    for i in range(len(ent)):
-        print(ent[i])
-
 
 if __name__  == "__main__":
     main()
