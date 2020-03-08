@@ -1,7 +1,7 @@
 # File name: Scheduler.py
 # Author: Mark Lee
 # Date created: 09/01/2020
-# Date last modified: 28/02/2020
+# Date last modified: 07/03/2020
 # Python Version: 3.8.1x
 
 # ----- Imports -----
@@ -19,7 +19,6 @@ except ImportError:
 # ----- Instance variables -----
 
 date_time = ""
-location = ""
 BinID = ""
 level = 0
 # neighbourhood_id = ""
@@ -35,9 +34,8 @@ class Schedule:
 
     # --- Initialize each database entry object ---
 
-    def __init__(self, date_time, location, BinID, level, type):
+    def __init__(self, date_time, BinID, level, type):
         self.date_time = date_time
-        self.location = location
         self.BinID = BinID
         self.level = level
         self.type = type
@@ -55,14 +53,6 @@ class Schedule:
     # Set date and time of bin
     def set_date_time(self, dt):
         self._date_time = dt
-
-    # Get location of bin
-    def get_location(self):
-        return self._location
-
-    # Set location of bin
-    def set_location(self, l):
-        self._location = l
 
     # Get ID of bin
     def get_BinID(self):
@@ -91,69 +81,69 @@ class Schedule:
     # --- Sorting based on attribute ---
 
     # Sort by date and time
-    def sort_date_time(self, ent):
+    def sort_date_time(self, bin):
         sorted_entries = sorted(
-            ent, key = lambda ent: datetime.strptime(ent['Created'], '%m/%d/%y %H:%M'), reverse=True
+            bin, key = lambda bin: datetime.strptime(bin['Created'], '%m/%d/%y %H:%M'), reverse=True
         )
 
     # Sort by location
     # Need to compute the shortest path from user to nearest bin - Phase Three
-    #def sort_location(self, ent):
+    #def sort_location(self, bin):
 
     # Sort by ID
-    def sort_BinID(self, ent):
-        ent.sort(key = str.lower, reverse = True)
+    def sort_BinID(self, bin):
+        bin.sort(key = str.lower, reverse = True)
 
 
     # Sort by level
-    def sort_level(self, ent):
-        for i in range(len(ent)):
+    def sort_level(self, bin):
+        for i in range(len(bin)):
             min_index = i
-            for j in range(i + 1, len(ent)):
-                if ent[min_index] > ent[j]:
+            for j in range(i + 1, len(bin)):
+                if bin[min_index] > bin[j]:
                     min_index = j
-        ent[i], ent[min_index] = ent[min_index], ent[i]
+        bin[i], bin[min_index] = bin[min_index], bin[i]
 
-        #new_ent_cap = []
-        #minimum = ent[0]  # arbitrary number in list
-        #for x in ent:
+        #new_bin_cap = []
+        #minimum = bin[0]  # arbitrary number in list
+        #for x in bin:
         #    if x < minimum:
         #        minimum = x
-        #new_ent_cap.append(minimum)
-        #ent.remove(minimum)
+        #new_bin_cap.append(minimum)
+        #bin.remove(minimum)
 
-        ent.get_level().sort(reverse = True)
+        bin.get_level().sort(reverse = True)
 
     # Sort by type
     # Priority Order: Compost, Waste, Bottles and Cans, Paper
     def sort_type(self, i):
-        def TypeCompost(self, ent):
+        def TypeCompost(self, bin):
             print("Sort Compost: rn")
             if self._type == "Compost":
-                ent.sort(reverse=True)
+                bin.sort(reverse=True)
             else:
                 print("Invalid. Type must be Compost")
 
-        def TypeWaste(self, ent):
+        def TypeWaste(self, bin):
             print("Sort Compost: rn")
             if self._type == "Waste":
-                ent.sort(reverse=True)
+                bin.sort(reverse=True)
             else:
                 print("Invalid. Type must be Waste")
 
 
-        def TypeBottlesAndCans(self, ent):
+        def TypeBottlesAndCans(self, bin):
             print("Sort Compost: rn")
             if self._type == "Bottles and Cans":
-                ent.sort(reverse=True)
+                bin.sort(reverse=True)
             else:
                 print("Invalid. Type must be Bottles and Cans.")
 
 
-        def TypePaper(self, ent):
+        def TypePaper(self, bin):
             print("Sort Compost: rn")
             if self._type == "Paper":
-                ent.sort(reverse=True)
+                bin.sort(reverse=True)
             else:
                 print("Invalid. Type must be Paper.")
 
@@ -181,11 +171,11 @@ class Schedule:
 
     # Check if queue is empty
     def isEmpty(self):
-        return len(self.ent) == []
+        return len(self.bin) == []
 
     # Insert element in queue
-    def insert(self, ent):
-        self.queue.append(ent)
+    def insert(self, bin):
+        self.queue.append(bin)
 
     # Delete element from queue
     def delete(self):
@@ -208,9 +198,9 @@ class Schedule:
         print(self._date_time, self._location, self._BinID, self._level, self._type)
 
     # Print all database entries
-    def display_entries(self, ent):
-        for i in range(len(ent)):
-            print(ent[i])
+    def display_entries(self, bin):
+        for i in range(len(bin)):
+            print(bin[i])
 
     # Default errors
     def errorMessage(self):
@@ -222,13 +212,18 @@ class Schedule:
 def main():
     # Create a dynamic list of database entries
     # Implemented via Priority Queue
-    ent = []
+    bin = []
 
     # Append new entries when received
-    ent.append(Schedule(datetime, "Rye U", "12345", 10, "Waste"))
-    ent.append(Schedule(datetime, "Rye U", "23403", 8, "Paper"))
-    ent.append(Schedule(datetime, "Rye U", "01322", 5, "Compost"))
-    ent.append(Schedule(datetime, "Rye U", "94943", 9, "Bottles and Cans"))
+    bin.append(Schedule(datetime, "12345", 10, "Waste"))
+    bin.append(Schedule(datetime, "23403", 8, "Paper"))
+    bin.append(Schedule(datetime, "01322", 5, "Compost"))
+
+    # Create list of trucks
+    truck = []
+
+    # Append truck entries
+    #truck.append(self, "32423", )
 
 if __name__  == "__main__":
     main()
